@@ -189,7 +189,10 @@ async def get_current_user(token: str=Depends(oauth2_scheme)):
      else:
           raise credential_exception
      
-
+#  Home
+@app.get("/")
+def home():
+     return{"Please add '/docs' to the url"}
 
 #                Users
 

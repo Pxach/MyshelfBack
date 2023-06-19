@@ -5,7 +5,6 @@ from fastapi.testclient import TestClient
 
 client=TestClient(app=app)
 
-
 def test_print_all_authors():
     response=client.get('/Authors')
     assert response.status_code == status.HTTP_200_OK
@@ -41,3 +40,4 @@ def test_delete_author_valid():
 def test_delete_author_nonexisting_id():
     response=client.delete("/Authors/7")
     assert response.status_code==404
+
