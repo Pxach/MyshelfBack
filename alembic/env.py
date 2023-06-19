@@ -5,7 +5,7 @@ from decouple import config
 from alembic import context
 
 
-db_url=config('db_url').replace("://", "ql://", 1)
+db_url=config('db_url')
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
