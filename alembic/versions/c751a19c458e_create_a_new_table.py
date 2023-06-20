@@ -24,7 +24,7 @@ def upgrade():
         sa.Column('title', sa.String(255), nullable=False),
         sa.Column('summary', sa.Text, nullable=False),
         sa.Column('isbn', sa.String(255), nullable=False),
-        sa.Column('a_id', sa.String(255), nullable=False),
+        sa.Column('author_id', sa.String(255), nullable=False),
     )
     op.create_table(
         'Authors',
@@ -61,7 +61,7 @@ def data_upgrades_booktable():
             column('title', String),
             column('summary', String),
             column('isbn', String),
-            column('a_id', String),
+            column('author_id', String),
         )
 
         op.bulk_insert(my_table,
@@ -70,13 +70,13 @@ def data_upgrades_booktable():
                  'title':'Oceans',
                  'summary':'description1',
                  'isbn':'978-1-945209-05-5',
-                 'a_id':'1',
+                 'author_id':'1',
                  },
                  {'book_id': '2',
                  'title':'Deserts',
                  'summary':'description2',
                  'isbn':'978-1-945329-05-5',
-                 'a_id':'2',
+                 'author_id':'2',
                  },
             ]
         )

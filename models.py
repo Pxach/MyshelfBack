@@ -7,7 +7,7 @@ class Book(Base):
     title=Column(String(255),nullable=False)
     summary=Column(Text,nullable=False)
     isbn=Column(String(255),nullable=False)
-    a_id=Column(Integer,nullable=False)
+    author_id=Column(Integer,nullable=False)
 
 
 class Author(Base):
