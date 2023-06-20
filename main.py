@@ -14,6 +14,7 @@ import time
 from datetime import datetime, timedelta
 from functools import wraps
 import MyExceptions
+from classes import New_book, User, updated_book, New_author,updated_author,Token,TokenData
 
 #                Session        
 
@@ -28,61 +29,11 @@ app=FastAPI()
 logging.basicConfig(level=logging.INFO, filename="log.log", filemode="w", format="%(asctime)s - %(levelname)s - %(message)s")
 secretKey="cfb111cd24fcaa8e6905054506c3e2694a15569066cdba29090104deecd73223"
 Algorithm= "HS256"
-token_expires=15
+token_expires=5
 oauth2_scheme= OAuth2PasswordBearer(tokenUrl="token")
 
 
-#                Classes
-    
-class Token(BaseModel):
-     access_token: str
-     token_type:str
-
-class TokenData(BaseModel):
-     username:str or None=None
-
-class User(BaseModel):
-     username:str
-     password:str
-
-     class Config:
-        orm_mode=True
-
-
-class New_book(BaseModel):
-    book_id:int
-    title:str
-    summary:str
-    isbn:str
-    author_id:int
-
-    class Config:
-        orm_mode=True
-
-class updated_book(BaseModel):
-    title:str
-    summary:str
-    isbn:str
-    author_id:int
-
-    class Config:
-        orm_mode=True
-
-class New_author(BaseModel):
-    author_id:int
-    name:str
-
-    class Config:
-        orm_mode=True
-
-class updated_author(BaseModel):
-    name:str
-
-    class Config:
-        orm_mode=True
-
-
-#     Rate limiting
+#                         Rate limiting
 
 def rate_limited(max_calls:int, time_frame:int):
      def decorator(func):
@@ -102,7 +53,7 @@ def rate_limited(max_calls:int, time_frame:int):
 
 
 
-# 'utility functions'
+#                        utility functions
 
 def createToken(data:dict, expires_delta: timedelta or None = None):
      to_encode=data.copy()
@@ -131,10 +82,13 @@ async def get_current_user(token: str=Depends(oauth2_scheme)):
      else:
           raise MyExceptions.credential_exception
      
-#  The first page that appears
-@app.get("/")
+     
+#            The first text that appears
+@app.get("/", include_in_schema=False)
 def home():
-     return {"Please add '/docs' to the url"}
+    return ("Please add '/docs' to the url")
+
+
 
 #                Users
 
@@ -160,8 +114,8 @@ async def Sign_up( request:Request ,background_tasks:BackgroundTasks,user:User,d
         except MyExceptions.redundant_user as e:
             return e
 
-
-@app.post("/token",response_model=Token, status_code=status.HTTP_200_OK)
+#  For login (does not appear)
+@app.post("/token",response_model=Token, status_code=status.HTTP_200_OK, include_in_schema=False)
 @rate_limited(max_calls=3, time_frame=60)
 async def Log_in(request:Request,form_data:OAuth2PasswordRequestForm=Depends(),db: Session=Depends(get_db)):
     try:
@@ -179,12 +133,12 @@ async def Log_in(request:Request,form_data:OAuth2PasswordRequestForm=Depends(),d
         return e
 
      
-#                  books
+#                  Books
 
 #to print all books
 @app.get("/Books", response_model=List[New_book],status_code=status.HTTP_200_OK)
 @rate_limited(max_calls=2, time_frame=60)
-async def List_all_books(request:Request, db: Session=Depends(get_db)):
+async def List_all_books(request:Request, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
             allbooks=db.query(models.Book).all()
             logging.info(f"all books displayed")
             return allbooks
@@ -192,7 +146,7 @@ async def List_all_books(request:Request, db: Session=Depends(get_db)):
 #print books by id
 @app.get("/Books/{id}",response_model=New_book,status_code=status.HTTP_200_OK)
 @rate_limited(max_calls=6, time_frame=60)
-async def Find_Books_by_Id(request:Request ,id:int, db: Session=Depends(get_db)):
+async def Find_Books_by_Id(request:Request ,id:int, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
             try:
                 found=db.query(models.Book).filter(models.Book.book_id==id).first()
                 if found is None:
@@ -282,7 +236,7 @@ async def Delete_Book(request:Request ,background_tasks:BackgroundTasks, id:int,
 #to print all authors
 @app.get("/Authors", response_model=List[New_author],status_code=200)
 @rate_limited(max_calls=2, time_frame=60)
-async def List_all_authors(request:Request ,db: Session=Depends(get_db)):
+async def List_all_authors(request:Request ,db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
             allauthors=db.query(models.Author).all()
             logging.info(f"All Authors displayed")
             return allauthors
@@ -290,7 +244,7 @@ async def List_all_authors(request:Request ,db: Session=Depends(get_db)):
 #print authors by id
 @app.get("/Authors/{id}",response_model=New_author,status_code=status.HTTP_200_OK)
 @rate_limited(max_calls=3, time_frame=60)
-async def Find_Authors_by_Id(request:Request ,id:int, db: Session=Depends(get_db)):
+async def Find_Authors_by_Id(request:Request ,id:int, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
             try:
                 found=db.query(models.Author).filter(models.Author.author_id==id).first()
                 if found is None:
