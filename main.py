@@ -229,9 +229,9 @@ async def Create_Books(request:Request ,background_tasks:BackgroundTasks,book:Ne
                                     background_tasks.add_task(db.commit)
                                     logging.info(f"Book created")
                                     return new_book
-                        except author_not_found as er:
+                        except MyExceptions.author_not_found as er:
                                 return er
-                except redundant_book as e:
+                except MyExceptions.redundant_book as e:
                         return e
 
 #to update books
@@ -256,9 +256,9 @@ async def Update_Books(request:Request ,background_tasks:BackgroundTasks,id:int,
                             background_tasks.add_task(db.commit)
                             logging.info(f"Book updated")
                             return to_update
-                    except author_not_found as er:
+                    except MyExceptions.author_not_found as er:
                         return er
-            except book_not_found as e:
+            except MyExceptions.book_not_found as e:
                 return e
 
 #to delete books  
