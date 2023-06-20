@@ -1,89 +1,21 @@
-from fastapi import FastAPI,status, Depends, BackgroundTasks, Security, Request
-from typing import List, Union, Any
-from pydantic import BaseModel
-from database import SessionLocal
+from fastapi import FastAPI,status, Depends, BackgroundTasks, Request
+from typing import List
 from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordRequestForm
+from datetime import  timedelta
+import MyExceptions
+from classes import *
+from Myfunctions import *
 import logging
 import models
-import starlette
-from fastapi_jwt_auth import AuthJWT
-from jose import JWTError, jwt
-from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-import time
-from datetime import datetime, timedelta
-from functools import wraps
-import MyExceptions
-from classes import New_book, User, updated_book, New_author,updated_author,Token,TokenData
 
-#                Session        
-
-def get_db():
-    try:
-        db=SessionLocal()
-        yield db
-    finally:
-        db.close()
 
 app=FastAPI()
-logging.basicConfig(level=logging.INFO, filename="log.log", filemode="w", format="%(asctime)s - %(levelname)s - %(message)s")
-secretKey="cfb111cd24fcaa8e6905054506c3e2694a15569066cdba29090104deecd73223"
-Algorithm= "HS256"
-token_expires=5
-oauth2_scheme= OAuth2PasswordBearer(tokenUrl="token")
 
 
-#                         Rate limiting
-
-def rate_limited(max_calls:int, time_frame:int):
-     def decorator(func):
-          calls=[]
-
-          @wraps(func)
-          async def wrapper(request: Request, *args, **kwargs):
-               now=time.time()
-               calls_in_time_frame=[all for call in calls if call>now - time_frame]
-               if len(calls_in_time_frame)>= max_calls:
-                     logging.error("Rate limit exceeded", exc_info=True)
-                     raise  MyExceptions.Exceeded_rate_limit
-               calls.append(now)
-               return await func(request,*args, **kwargs)
-          return wrapper
-     return decorator
-
-
-
-#                        utility functions
-
-def createToken(data:dict, expires_delta: timedelta or None = None):
-     to_encode=data.copy()
-     if expires_delta:
-          expire=datetime.utcnow() + expires_delta
-     else:
-          expire=datetime.utcnow() + timedelta(minutes=10)
-     to_encode.update({"exp":expire})
-     encoded_jwt = jwt.encode(to_encode, secretKey, algorithm=Algorithm)
-     return encoded_jwt
-
-
-async def get_current_user(token: str=Depends(oauth2_scheme)):
-     db=next(get_db())
-     try:
-          payload=jwt.decode(token, secretKey, algorithms=[Algorithm])
-          username:str=payload.get("sub")
-          if username is None:
-               raise MyExceptions.credential_exception
-          token_data = TokenData(username=username)
-     except JWTError:
-          raise MyExceptions.credential_exception
-     db_user=db.query(models.User).filter(models.User.username==token_data.username).first()
-     if db_user is not None:
-          return db_user
-     else:
-          raise MyExceptions.credential_exception
-     
      
 #            The first text that appears
+
 @app.get("/", include_in_schema=False)
 def home():
     return ("Please add '/docs' to the url")
@@ -217,7 +149,7 @@ async def Update_Books(request:Request ,background_tasks:BackgroundTasks,id:int,
 
 #to delete books  
 @app.delete("/Books/{id}", status_code=status.HTTP_200_OK)
-@rate_limited(max_calls=15, time_frame=60)
+@rate_limited(max_calls=5, time_frame=60)
 async def Delete_Book(request:Request ,background_tasks:BackgroundTasks, id:int, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
             try:
                 to_delete=db.query(models.Book).filter(models.Book.book_id==id).first()
@@ -277,7 +209,7 @@ async def Create_Authors(request:Request ,background_tasks:BackgroundTasks,autho
             except MyExceptions.redundant_author as e:
                 return e
         
-#to update
+#to update authors
 @app.put("/Authors/{id}",response_model=updated_author,status_code=status.HTTP_200_OK)
 @rate_limited(max_calls=2, time_frame=60)
 async def Update_Authors(request:Request ,background_tasks:BackgroundTasks,id:int,author:updated_author, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
@@ -294,7 +226,7 @@ async def Update_Authors(request:Request ,background_tasks:BackgroundTasks,id:in
             except MyExceptions.author_not_found as e:
                 return e
 
-#to delete    
+#to delete authors
 @app.delete("/Authors/{id}")
 @rate_limited(max_calls=2, time_frame=60)
 async def Delete_Author(request:Request ,background_tasks:BackgroundTasks,id:int, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
