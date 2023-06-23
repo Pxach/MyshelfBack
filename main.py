@@ -10,7 +10,11 @@ import logging
 import models
 
 
+
+
 app=FastAPI()
+
+
 
 
      
@@ -67,10 +71,9 @@ async def Log_in(request:Request,form_data:OAuth2PasswordRequestForm=Depends(),d
      
 #                  Books
 
-#to print all books
-@app.get("/Books", response_model=List[New_book],status_code=status.HTTP_200_OK)
-@rate_limited(max_calls=2, time_frame=60)
-async def List_all_books(request:Request, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
+@app.get("/Books" ,response_model=List[New_book],status_code=status.HTTP_200_OK)
+@rate_limited(max_calls=3, time_frame=60)
+async def List_all_books(request:Request, db: Session=Depends(get_db)):
             allbooks=db.query(models.Book).all()
             logging.info(f"all books displayed")
             return allbooks
@@ -78,7 +81,7 @@ async def List_all_books(request:Request, db: Session=Depends(get_db),current_us
 #print books by id
 @app.get("/Books/{id}",response_model=New_book,status_code=status.HTTP_200_OK)
 @rate_limited(max_calls=6, time_frame=60)
-async def Find_Books_by_Id(request:Request ,id:int, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
+async def Find_Books_by_Id(request:Request ,id:int, db: Session=Depends(get_db)):
             try:
                 found=db.query(models.Book).filter(models.Book.book_id==id).first()
                 if found is None:
@@ -92,8 +95,8 @@ async def Find_Books_by_Id(request:Request ,id:int, db: Session=Depends(get_db),
 #to create books
 @app.post("/Books", response_model=New_book,
           status_code=status.HTTP_201_CREATED)
-@rate_limited(max_calls=2, time_frame=60)
-async def Create_Books(request:Request ,background_tasks:BackgroundTasks,book:New_book,db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
+@rate_limited(max_calls=3, time_frame=60)
+async def Create_Books(request:Request ,background_tasks:BackgroundTasks,book:New_book,db: Session=Depends(get_db)):
                 try:
                         db_book=db.query(models.Book).filter(models.Book.book_id==book.book_id).first()
                         if db_book is not None:
@@ -122,7 +125,7 @@ async def Create_Books(request:Request ,background_tasks:BackgroundTasks,book:Ne
 
 #to update books
 @app.put("/Books/{id}",response_model=updated_book,status_code=status.HTTP_200_OK)
-@rate_limited(max_calls=1, time_frame=60)
+@rate_limited(max_calls=3, time_frame=60)
 async def Update_Books(request:Request ,background_tasks:BackgroundTasks,id:int,book:updated_book, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
             try:
                 db_book=db.query(models.Book).filter(models.Book.book_id==id).first()
@@ -149,7 +152,7 @@ async def Update_Books(request:Request ,background_tasks:BackgroundTasks,id:int,
 
 #to delete books  
 @app.delete("/Books/{id}", status_code=status.HTTP_200_OK)
-@rate_limited(max_calls=5, time_frame=60)
+@rate_limited(max_calls=3, time_frame=60)
 async def Delete_Book(request:Request ,background_tasks:BackgroundTasks, id:int, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
             try:
                 to_delete=db.query(models.Book).filter(models.Book.book_id==id).first()
@@ -167,7 +170,7 @@ async def Delete_Book(request:Request ,background_tasks:BackgroundTasks, id:int,
 
 #to print all authors
 @app.get("/Authors", response_model=List[New_author],status_code=200)
-@rate_limited(max_calls=2, time_frame=60)
+@rate_limited(max_calls=3, time_frame=60)
 async def List_all_authors(request:Request ,db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
             allauthors=db.query(models.Author).all()
             logging.info(f"All Authors displayed")
@@ -211,7 +214,7 @@ async def Create_Authors(request:Request ,background_tasks:BackgroundTasks,autho
         
 #to update authors
 @app.put("/Authors/{id}",response_model=updated_author,status_code=status.HTTP_200_OK)
-@rate_limited(max_calls=2, time_frame=60)
+@rate_limited(max_calls=3, time_frame=60)
 async def Update_Authors(request:Request ,background_tasks:BackgroundTasks,id:int,author:updated_author, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
             try:
                 db_author=db.query(models.Author).filter(models.Author.author_id==id).first()
@@ -228,7 +231,7 @@ async def Update_Authors(request:Request ,background_tasks:BackgroundTasks,id:in
 
 #to delete authors
 @app.delete("/Authors/{id}")
-@rate_limited(max_calls=2, time_frame=60)
+@rate_limited(max_calls=3, time_frame=60)
 async def Delete_Author(request:Request ,background_tasks:BackgroundTasks,id:int, db: Session=Depends(get_db),current_user:User=Depends(get_current_user)):
             try:
                 to_delete=db.query(models.Author).filter(models.Author.author_id==id).first()
