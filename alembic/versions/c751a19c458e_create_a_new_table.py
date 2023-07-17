@@ -7,7 +7,7 @@ Create Date: 2023-06-13 12:38:31.882003
 """
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy import String, Integer, Column
+from sqlalchemy import String, Integer, Column,Boolean
 from sqlalchemy.sql import table,column
 
 
@@ -24,7 +24,7 @@ def upgrade():
         sa.Column('title', sa.String(255), nullable=False),
         sa.Column('summary', sa.Text, nullable=False),
         sa.Column('isbn', sa.String(255), nullable=False),
-        sa.Column('author_id', sa.String(255), nullable=False),
+        sa.Column('author', sa.String(255), nullable=False),
     )
     op.create_table(
         'Authors',
@@ -35,9 +35,27 @@ def upgrade():
         'Users',
         sa.Column('username', sa.String(255), primary_key=True),
         sa.Column('password', sa.String(255), nullable=False),
+        sa.Column('isAdmin', sa.Boolean, nullable=False),
+
     )
     data_upgrades_authortable()
     data_upgrades_booktable()
+    data_upgrades_usertable()
+
+def data_upgrades_usertable():
+        my_table = table('Users',
+            column('username', String),
+            column('password', String),
+             column('isAdmin', Boolean)
+        )
+
+        op.bulk_insert(my_table,
+            [
+                {'username': 'string',
+                 'password':'string',
+                 "isAdmin":True},
+            ]
+        )
     
 def data_upgrades_authortable():
         my_table = table('Authors',
@@ -61,7 +79,7 @@ def data_upgrades_booktable():
             column('title', String),
             column('summary', String),
             column('isbn', String),
-            column('author_id', String),
+            column('author', String),
         )
 
         op.bulk_insert(my_table,
@@ -70,13 +88,13 @@ def data_upgrades_booktable():
                  'title':'Oceans',
                  'summary':'description1',
                  'isbn':'978-1-945209-05-5',
-                 'author_id':'1',
+                 'author':'Jean',
                  },
                  {'book_id': '2',
                  'title':'Deserts',
                  'summary':'description2',
                  'isbn':'978-1-945329-05-5',
-                 'author_id':'2',
+                 'author':'Maria',
                  },
             ]
         )

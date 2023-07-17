@@ -6,7 +6,7 @@ class New_book(BaseModel):
     title:str
     summary:str
     isbn:str
-    author_id:int
+    author:str
 
     class Config:
         orm_mode=True
@@ -15,6 +15,15 @@ class New_book(BaseModel):
 class User(BaseModel):
      username:str
      password:str
+     isAdmin:bool
+
+
+     class Config:
+        orm_mode=True
+
+class Updated_User(BaseModel):
+     isAdmin:bool
+
 
      class Config:
         orm_mode=True
@@ -23,7 +32,7 @@ class updated_book(BaseModel):
     title:str
     summary:str
     isbn:str
-    author_id:int
+    author:str
 
     class Config:
         orm_mode=True
