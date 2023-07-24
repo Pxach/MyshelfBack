@@ -26,7 +26,7 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["https://myshelf-11f78aafd8e0.herokuapp.com/"]
 )
 
 class iteratingIDs():
