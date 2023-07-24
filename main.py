@@ -25,8 +25,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins="https://myshelf-11f78aafd8e0.herokuapp.com",
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["https://myshelf-11f78aafd8e0.herokuapp.com/"]
+    allow_methods=["POST"],
+    allow_headers=["https://myshelf-11f78aafd8e0.herokuapp.com"]
 )
 
 class iteratingIDs():
