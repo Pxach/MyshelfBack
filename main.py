@@ -20,10 +20,11 @@ origins = [
     "localhost:3000"
 ]
 
+# "https://myshelf-11f78aafd8e0.herokuapp.com"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://myshelf-11f78aafd8e0.herokuapp.com",origins,"http://localhost:3000/"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
@@ -106,8 +107,8 @@ async def List_all_users(request:Request, db: Session=Depends(get_db)):
 
 #to update users
 @app.put("/Users/update/{username}",response_model=Updated_User,status_code=status.HTTP_200_OK)
-@rate_limited(max_calls=3, time_frame=60)
-async def Update_User(request:Request ,background_tasks:BackgroundTasks,username:str,user:Updated_User, db: Session=Depends(get_db)):
+@rate_limited(max_calls=120, time_frame=60)
+async def Update_User(request:Request ,background_tasks:BackgroundTasks,user:Updated_User, db: Session=Depends(get_db)):
                 to_update=db.query(models.User).filter(models.User.username==username).first()
                 to_update.isAdmin=user.isAdmin
                 background_tasks.add_task(db.commit)
