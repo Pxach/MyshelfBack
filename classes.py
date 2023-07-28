@@ -28,6 +28,7 @@ class Updated_User(BaseModel):
      class Config:
         orm_mode=True
 
+                
 class updated_book(BaseModel):
     title:str
     summary:str

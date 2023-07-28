@@ -20,7 +20,7 @@ depends_on = None
 def upgrade():
     op.create_table(
         'Books',
-        sa.Column('book_id', sa.Integer, primary_key=True),
+        sa.Column('book_id', sa.Integer, primary_key=True, autoincrement=True),
         sa.Column('title', sa.String(255), nullable=False),
         sa.Column('summary', sa.Text, nullable=False),
         sa.Column('isbn', sa.String(255), nullable=False),
@@ -28,7 +28,7 @@ def upgrade():
     )
     op.create_table(
         'Authors',
-        sa.Column('author_id', sa.Integer, primary_key=True),
+        sa.Column('author_id', sa.Integer, primary_key=True, autoincrement=True),
         sa.Column('name', sa.String(255), nullable=False),
     )
     op.create_table(
@@ -41,6 +41,7 @@ def upgrade():
     data_upgrades_authortable()
     data_upgrades_booktable()
     data_upgrades_usertable()
+    
 
 def data_upgrades_usertable():
         my_table = table('Users',
@@ -65,11 +66,9 @@ def data_upgrades_authortable():
 
         op.bulk_insert(my_table,
             [
-                {'author_id': '1',
+                {
                  'name':'Maria'},
-                 {'author_id': '2',
-                 'name':'Paul'},
-                 {'author_id': '3',
+                 {
                  'name':'Jean'},
             ]
         )
@@ -84,13 +83,13 @@ def data_upgrades_booktable():
 
         op.bulk_insert(my_table,
             [
-                {'book_id': '1',
+                {
                  'title':'Oceans',
                  'summary':'description1',
                  'isbn':'978-1-945209-05-5',
                  'author':'Jean',
                  },
-                 {'book_id': '2',
+                 {
                  'title':'Deserts',
                  'summary':'description2',
                  'isbn':'978-1-945329-05-5',

@@ -32,7 +32,6 @@ app.add_middleware(
 
 class iteratingIDs():
     newid = itertools.count()
-
      
 #            The first text that appears
 
@@ -153,26 +152,25 @@ async def Find_Books_by_Id(request:Request ,title:str, db: Session=Depends(get_d
                 return e
 
 #to create books
-@app.post("/Books", response_model=New_book,
+@app.post("/Books", 
           status_code=status.HTTP_201_CREATED)
 @rate_limited(max_calls=20, time_frame=60)
-async def Create_Books(request:Request ,background_tasks:BackgroundTasks,book:New_book,db: Session=Depends(get_db)):
-                try:
-                        db_book=db.query(models.Book).filter(models.Book.book_id==book.book_id).first()
-                        if db_book is not None:
-                            raise MyExceptions.redundant_book 
-                        else:
-                            new_book=models.Book(
-                                book_id=book.book_id,
-                                title=book.title,
-                                summary=book.summary,
-                                isbn=book.isbn,
-                                author=book.author
-                            )
-                            background_tasks.add_task(db.add,new_book)
-                            background_tasks.add_task(db.commit)
-                            logging.info(f"Book created")
-                            return new_book
+async def Create_Books(request:Request ,background_tasks:BackgroundTasks,book:updated_book,db: Session=Depends(get_db)):
+                # try:
+                #         db_book=db.query(models.Book).filter(models.Book.book_id==book.book_id).first()
+                #         if db_book is not None:
+                #             raise MyExceptions.redundant_book 
+                #         else:
+                    new_book=models.Book(
+                        title=book.title,
+                        summary=book.summary,
+                        isbn=book.isbn,
+                        author=book.author
+                    )
+                    background_tasks.add_task(db.add,new_book)
+                    background_tasks.add_task(db.commit)
+                    logging.info(f"Book created")
+                    return new_book
                         # try:
                         #         db_author=db.query(models.Author).filter(models.Author.author_id==book.author_id).first()
                         #         if db_author is None:
@@ -184,8 +182,8 @@ async def Create_Books(request:Request ,background_tasks:BackgroundTasks,book:Ne
                         #             return new_book
                         # except MyExceptions.author_not_found as er:
                         #         return er
-                except MyExceptions.redundant_book as e:
-                        return e
+                # except MyExceptions.redundant_book as e:
+                #         return e
 
 #to update books
 @app.put("/Books/{id}",response_model=updated_book,status_code=status.HTTP_200_OK)
@@ -288,26 +286,24 @@ async def Find_Authors_by_Id(request:Request ,id:int, db: Session=Depends(get_db
                 return e
             
 #to create an author
-@app.post("/Authors", response_model=New_author,
+@app.post("/Authors", 
           status_code=status.HTTP_201_CREATED)
 @rate_limited(max_calls=16, time_frame=60)
-async def Create_Authors(request:Request ,background_tasks:BackgroundTasks,author:New_author,db: Session=Depends(get_db)):
-            try:
-                db_author=db.query(models.Author).filter(models.Author.author_id==author.author_id).first()
-                if db_author is not None:
-                    raise MyExceptions.redundant_author
-                else:
-                    new_author=models.Author(
-                        author_id=author.author_id,
-                        name=author.name,
-                    )
-
-                    background_tasks.add_task(db.add,new_author)
-                    background_tasks.add_task(db.commit)
-                    logging.info(f"Author created")
-                    return new_author
-            except MyExceptions.redundant_author as e:
-                return e
+async def Create_Authors(request:Request ,background_tasks:BackgroundTasks,author:updated_author,db: Session=Depends(get_db)):
+            # try:
+                # db_author=db.query(models.Author).filter(models.Author.author_id==author.author_id).first()
+                # if db_author is not None:
+                #     raise MyExceptions.redundant_author
+                # else:
+            new_author=models.Author(
+                 name=author.name
+             )
+            background_tasks.add_task(db.add,new_author)
+            background_tasks.add_task(db.commit)
+            logging.info(f"Author created")
+            return new_author
+            # except MyExceptions.redundant_author as e:
+            # return e
         
 #to update authors
 @app.put("/Authors/{id}",response_model=updated_author,status_code=status.HTTP_200_OK)
