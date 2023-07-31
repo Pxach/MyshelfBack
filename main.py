@@ -24,10 +24,10 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins="https://myshelf.onrender.com",
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["https://myshelf.onrender.com"]
+    allow_headers=["*"]
 )
 
 class iteratingIDs():
