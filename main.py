@@ -187,7 +187,7 @@ async def Create_Books(request:Request ,background_tasks:BackgroundTasks,book:up
 
 #to update books
 @app.put("/Books/{id}",response_model=updated_book,status_code=status.HTTP_200_OK)
-@rate_limited(max_calls=19, time_frame=60)
+@rate_limited(max_calls=50, time_frame=60)
 async def Update_Books(request:Request ,background_tasks:BackgroundTasks,id:int,book:updated_book, db: Session=Depends(get_db)):
             try:
                 db_book=db.query(models.Book).filter(models.Book.book_id==id).first()
@@ -307,7 +307,7 @@ async def Create_Authors(request:Request ,background_tasks:BackgroundTasks,autho
         
 #to update authors
 @app.put("/Authors/{id}",response_model=updated_author,status_code=status.HTTP_200_OK)
-@rate_limited(max_calls=3, time_frame=60)
+@rate_limited(max_calls=50, time_frame=60)
 async def Update_Authors(request:Request ,background_tasks:BackgroundTasks,id:int,author:updated_author, db: Session=Depends(get_db)):
             try:
                 db_author=db.query(models.Author).filter(models.Author.author_id==id).first()
