@@ -16,8 +16,8 @@ import itertools
 app=FastAPI()
 
 origins = [
-    "http://localhost:3000",
-    "localhost:3000"
+    "http://localhost:3001",
+    "localhost:3001"
 ]
 
 # "https://myshelf-11f78aafd8e0.herokuapp.com"
