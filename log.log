@@ -10,3 +10,66 @@ FROM "Books"
 2023-08-01 12:15:02,365 - INFO - [generated in 0.00057s] {}
 2023-08-01 12:15:03,076 - INFO - all books displayed
 2023-08-01 12:15:03,078 - INFO - ROLLBACK
+2023-08-01 13:39:23,295 - INFO - BEGIN (implicit)
+2023-08-01 13:39:23,298 - INFO - SELECT "Books".book_id AS "Books_book_id", "Books".title AS "Books_title", "Books".summary AS "Books_summary", "Books".isbn AS "Books_isbn", "Books".author AS "Books_author" 
+FROM "Books" 
+WHERE (lower("Books".title) LIKE lower(%(lower_1)s) || '%%')
+2023-08-01 13:39:23,299 - INFO - [generated in 0.00135s] {'lower_1': 'Oceans'}
+2023-08-01 13:39:23,837 - INFO - Book found
+2023-08-01 13:39:23,840 - INFO - ROLLBACK
+2023-08-01 13:41:10,849 - INFO - BEGIN (implicit)
+2023-08-01 13:41:10,850 - INFO - SELECT "Books".book_id AS "Books_book_id", "Books".title AS "Books_title", "Books".summary AS "Books_summary", "Books".isbn AS "Books_isbn", "Books".author AS "Books_author" 
+FROM "Books" 
+WHERE (lower("Books".title) LIKE lower(%(lower_1)s) || '%%')
+2023-08-01 13:41:10,851 - INFO - [cached since 107.6s ago] {'lower_1': 'Deserts'}
+2023-08-01 13:41:11,572 - INFO - Book found
+2023-08-01 13:41:11,573 - INFO - ROLLBACK
+2023-08-01 13:42:30,546 - INFO - BEGIN (implicit)
+2023-08-01 13:42:30,547 - INFO - SELECT "Books".book_id AS "Books_book_id", "Books".title AS "Books_title", "Books".summary AS "Books_summary", "Books".isbn AS "Books_isbn", "Books".author AS "Books_author" 
+FROM "Books" 
+WHERE (lower("Books".title) LIKE lower(%(lower_1)s) || '%%')
+2023-08-01 13:42:30,548 - INFO - [cached since 187.3s ago] {'lower_1': 'D'}
+2023-08-01 13:42:30,915 - INFO - Book found
+2023-08-01 13:42:30,917 - INFO - ROLLBACK
+2023-08-01 13:42:31,495 - INFO - BEGIN (implicit)
+2023-08-01 13:42:31,496 - INFO - SELECT "Books".book_id AS "Books_book_id", "Books".title AS "Books_title", "Books".summary AS "Books_summary", "Books".isbn AS "Books_isbn", "Books".author AS "Books_author" 
+FROM "Books" 
+WHERE (lower("Books".title) LIKE lower(%(lower_1)s) || '%%')
+2023-08-01 13:42:31,497 - INFO - [cached since 188.2s ago] {'lower_1': 'De'}
+2023-08-01 13:42:31,905 - INFO - Book found
+2023-08-01 13:42:31,906 - INFO - ROLLBACK
+2023-08-01 13:42:32,295 - INFO - BEGIN (implicit)
+2023-08-01 13:42:32,296 - INFO - SELECT "Books".book_id AS "Books_book_id", "Books".title AS "Books_title", "Books".summary AS "Books_summary", "Books".isbn AS "Books_isbn", "Books".author AS "Books_author" 
+FROM "Books" 
+WHERE (lower("Books".title) LIKE lower(%(lower_1)s) || '%%')
+2023-08-01 13:42:32,297 - INFO - [cached since 189s ago] {'lower_1': 'Des'}
+2023-08-01 13:42:32,706 - INFO - Book found
+2023-08-01 13:42:32,708 - INFO - ROLLBACK
+2023-08-01 13:42:34,431 - INFO - BEGIN (implicit)
+2023-08-01 13:42:34,432 - INFO - SELECT "Books".book_id AS "Books_book_id", "Books".title AS "Books_title", "Books".summary AS "Books_summary", "Books".isbn AS "Books_isbn", "Books".author AS "Books_author" 
+FROM "Books" 
+WHERE (lower("Books".title) LIKE lower(%(lower_1)s) || '%%')
+2023-08-01 13:42:34,433 - INFO - [cached since 191.1s ago] {'lower_1': 'Dese'}
+2023-08-01 13:42:34,864 - INFO - Book found
+2023-08-01 13:42:34,867 - INFO - ROLLBACK
+2023-08-01 13:42:34,873 - INFO - BEGIN (implicit)
+2023-08-01 13:42:34,874 - INFO - SELECT "Books".book_id AS "Books_book_id", "Books".title AS "Books_title", "Books".summary AS "Books_summary", "Books".isbn AS "Books_isbn", "Books".author AS "Books_author" 
+FROM "Books" 
+WHERE (lower("Books".title) LIKE lower(%(lower_1)s) || '%%')
+2023-08-01 13:42:34,875 - INFO - [cached since 191.6s ago] {'lower_1': 'Deser'}
+2023-08-01 13:42:35,238 - INFO - Book found
+2023-08-01 13:42:35,240 - INFO - ROLLBACK
+2023-08-01 13:42:35,241 - INFO - BEGIN (implicit)
+2023-08-01 13:42:35,242 - INFO - SELECT "Books".book_id AS "Books_book_id", "Books".title AS "Books_title", "Books".summary AS "Books_summary", "Books".isbn AS "Books_isbn", "Books".author AS "Books_author" 
+FROM "Books" 
+WHERE (lower("Books".title) LIKE lower(%(lower_1)s) || '%%')
+2023-08-01 13:42:35,243 - INFO - [cached since 191.9s ago] {'lower_1': 'Desert'}
+2023-08-01 13:42:35,637 - INFO - Book found
+2023-08-01 13:42:35,639 - INFO - ROLLBACK
+2023-08-01 13:42:51,323 - INFO - BEGIN (implicit)
+2023-08-01 13:42:51,324 - INFO - SELECT "Books".book_id AS "Books_book_id", "Books".title AS "Books_title", "Books".summary AS "Books_summary", "Books".isbn AS "Books_isbn", "Books".author AS "Books_author" 
+FROM "Books" 
+WHERE (lower("Books".title) LIKE lower(%(lower_1)s) || '%%')
+2023-08-01 13:42:51,325 - INFO - [cached since 208s ago] {'lower_1': 'Oceans'}
+2023-08-01 13:42:51,661 - INFO - Book found
+2023-08-01 13:42:51,662 - INFO - ROLLBACK
