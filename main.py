@@ -16,15 +16,15 @@ import itertools
 app=FastAPI()
 
 origins = [
-    "http://localhost:3001",
-    "localhost:3001"
+    "http://localhost:3000",
+    "localhost:3000"
 ]
 
 # "https://myshelf-11f78aafd8e0.herokuapp.com"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins="https://myshelf.onrender.com",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
